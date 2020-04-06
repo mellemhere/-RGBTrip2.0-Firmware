@@ -1,0 +1,7 @@
+fsl_gpio.h:155:20:GPIO_PinWrite	32	static
+leds_control.c:183:5:rgb_convert	24	static
+leds_control.c:187:6:rgb_set	24	static
+leds_control.c:194:6:rgb_set_color	32	static
+leds_control.c:200:6:turnStripState	24	static
+leds_control.c:208:6:toogleState	8	static
+leds_control.c:218:6:rgb_tick	24	static
