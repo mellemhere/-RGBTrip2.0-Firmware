@@ -33,6 +33,26 @@ extern "C" {
 #define FTM0_IRQ_PRIORITY 0
 /* FTM0 interrupt handler identifier. */
 #define FTM0_IRQHANDLER FTM0_IRQHandler
+/* Definition of peripheral ID */
+#define FTM1_PERIPHERAL FTM1
+/* Definition of the clock source frequency */
+#define FTM1_CLOCK_SOURCE 60000000UL
+/* FTM1 interrupt vector ID (number). */
+#define FTM1_IRQN FTM1_IRQn
+/* FTM1 interrupt vector priority. */
+#define FTM1_IRQ_PRIORITY 1
+/* FTM1 interrupt handler identifier. */
+#define FTM1_IRQHANDLER FTM1_IRQHandler
+/* Definition of peripheral ID */
+#define FTM2_PERIPHERAL FTM2
+/* Definition of the clock source frequency */
+#define FTM2_CLOCK_SOURCE CLOCK_GetFreq(kCLOCK_BusClk)
+/* FTM2 interrupt vector ID (number). */
+#define FTM2_IRQN FTM2_IRQn
+/* FTM2 interrupt vector priority. */
+#define FTM2_IRQ_PRIORITY 0
+/* FTM2 interrupt handler identifier. */
+#define FTM2_IRQHANDLER FTM2_IRQHandler
 /* Alias for GPIOA peripheral */
 #define GPIOA_GPIO GPIOA
 /* Alias for PORTA */
@@ -58,6 +78,8 @@ extern "C" {
  * Global variables
  **********************************************************************************************************************/
 extern const ftm_config_t FTM0_config;
+extern const ftm_config_t FTM1_config;
+extern const ftm_config_t FTM2_config;
 
 /***********************************************************************************************************************
  * Initialization functions

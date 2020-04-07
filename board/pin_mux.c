@@ -17,6 +17,7 @@ pin_labels:
 - {pin_num: '57', pin_signal: PTB9/SPI1_PCS1/UART3_CTS_b/FB_AD20, label: LED6_G, identifier: LED6_G}
 - {pin_num: '35', pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI, label: INPUT_ADC, identifier: INPUT_ADC}
 - {pin_num: '69', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, label: LED7_R, identifier: LED7_R}
+- {pin_num: '36', pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO, label: IR_OUT, identifier: IR_OUT}
 - {pin_num: '72', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS, label: LED7_B, identifier: LED7_B}
 - {pin_num: '73', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK, label: LED8_R, identifier: LED8_R}
 - {pin_num: '64', pin_signal: PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA, label: LED3_G, identifier: LED3_R;LED3_G}
@@ -123,6 +124,7 @@ BOARD_InitPins:
   - {pin_num: '31', peripheral: GPIOE, signal: 'GPIO, 24', pin_signal: ADC0_SE17/PTE24/UART4_TX/I2C0_SCL/EWM_OUT_b, identifier: LED10_B, direction: OUTPUT}
   - {pin_num: '35', peripheral: GPIOA, signal: 'GPIO, 1', pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge,
     drive_strength: low, pull_select: down}
+  - {pin_num: '36', peripheral: GPIOA, signal: 'GPIO, 2', pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -152,6 +154,13 @@ void BOARD_InitPins(void)
     };
     /* Initialize GPIO functionality on pin PTA1 (pin 35)  */
     GPIO_PinInit(BOARD_INITPINS_INPUT_ADC_GPIO, BOARD_INITPINS_INPUT_ADC_PIN, &INPUT_ADC_config);
+
+    gpio_pin_config_t IR_OUT_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA2 (pin 36)  */
+    GPIO_PinInit(BOARD_INITPINS_IR_OUT_GPIO, BOARD_INITPINS_IR_OUT_PIN, &IR_OUT_config);
 
     gpio_pin_config_t LED1_R_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -405,6 +414,9 @@ void BOARD_InitPins(void)
 
     /* PORTA17 (pin 47) is configured as RMII0_TXD1 */
     PORT_SetPinMux(BOARD_INITPINS_RMII0_TXD1_PORT, BOARD_INITPINS_RMII0_TXD1_PIN, kPORT_MuxAlt4);
+
+    /* PORTA2 (pin 36) is configured as PTA2 */
+    PORT_SetPinMux(BOARD_INITPINS_IR_OUT_PORT, BOARD_INITPINS_IR_OUT_PIN, kPORT_MuxAsGpio);
 
     /* PORTA5 (pin 39) is configured as RMII0_RXER */
     PORT_SetPinMux(BOARD_INITPINS_RMII0_RXER_PORT, BOARD_INITPINS_RMII0_RXER_PIN, kPORT_MuxAlt4);

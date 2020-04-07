@@ -112,6 +112,142 @@ void FTM0_init(void) {
 }
 
 /***********************************************************************************************************************
+ * FTM1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FTM1'
+- type: 'ftm'
+- mode: 'EdgeAligned'
+- custom_name_enabled: 'false'
+- type_id: 'ftm_04a15ae4af2b404bf2ae403c3dbe98b3'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'FTM1'
+- config_sets:
+  - ftm_main_config:
+    - ftm_config:
+      - clockSource: 'kFTM_SystemClock'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - prescale: 'kFTM_Prescale_Divide_1'
+      - timerFrequency: '1778'
+      - bdmMode: 'kFTM_BdmMode_0'
+      - pwmSyncMode: 'kFTM_SoftwareTrigger'
+      - reloadPoints: 'kFTM_CntMax'
+      - faultMode: 'kFTM_Fault_Disable'
+      - faultFilterValue: '0'
+      - deadTimePrescale: 'kFTM_Deadtime_Prescale_1'
+      - deadTimeValue: '0'
+      - extTriggers: ''
+      - chnlInitState: ''
+      - chnlPolarity: ''
+      - useGlobalTimeBase: 'false'
+    - timer_interrupts: 'kFTM_TimeOverflowInterruptEnable'
+    - enable_irq: 'true'
+    - ftm_interrupt:
+      - IRQn: 'FTM1_IRQn'
+      - enable_priority: 'true'
+      - priority: '1'
+      - enable_custom_name: 'false'
+    - EnableTimerInInit: 'false'
+  - ftm_edge_aligned_mode:
+    - ftm_edge_aligned_channels_config: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const ftm_config_t FTM1_config = {
+  .prescale = kFTM_Prescale_Divide_1,
+  .bdmMode = kFTM_BdmMode_0,
+  .pwmSyncMode = kFTM_SoftwareTrigger,
+  .reloadPoints = kFTM_CntMax,
+  .faultMode = kFTM_Fault_Disable,
+  .faultFilterValue = 0,
+  .deadTimePrescale = kFTM_Deadtime_Prescale_1,
+  .deadTimeValue = 0,
+  .extTriggers = 0,
+  .chnlInitState = 0,
+  .chnlPolarity = 0,
+  .useGlobalTimeBase = false
+};
+
+void FTM1_init(void) {
+  FTM_Init(FTM1_PERIPHERAL, &FTM1_config);
+  FTM_SetTimerPeriod(FTM1_PERIPHERAL, ((FTM1_CLOCK_SOURCE/ (1U << (FTM1_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 1778) + 1);
+  FTM_EnableInterrupts(FTM1_PERIPHERAL, kFTM_TimeOverflowInterruptEnable);
+  /* Interrupt vector FTM1_IRQn priority settings in the NVIC */
+  NVIC_SetPriority(FTM1_IRQN, FTM1_IRQ_PRIORITY);
+  /* Enable interrupt FTM1_IRQn request in the NVIC */
+  EnableIRQ(FTM1_IRQN);
+}
+
+/***********************************************************************************************************************
+ * FTM2 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FTM2'
+- type: 'ftm'
+- mode: 'EdgeAligned'
+- custom_name_enabled: 'false'
+- type_id: 'ftm_04a15ae4af2b404bf2ae403c3dbe98b3'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'FTM2'
+- config_sets:
+  - ftm_main_config:
+    - ftm_config:
+      - clockSource: 'kFTM_SystemClock'
+      - clockSourceFreq: 'GetFreq'
+      - prescale: 'kFTM_Prescale_Divide_1'
+      - timerFrequency: '76000'
+      - bdmMode: 'kFTM_BdmMode_0'
+      - pwmSyncMode: 'kFTM_SoftwareTrigger'
+      - reloadPoints: 'kFTM_CntMax'
+      - faultMode: 'kFTM_Fault_Disable'
+      - faultFilterValue: '0'
+      - deadTimePrescale: 'kFTM_Deadtime_Prescale_1'
+      - deadTimeValue: '0'
+      - extTriggers: ''
+      - chnlInitState: ''
+      - chnlPolarity: ''
+      - useGlobalTimeBase: 'false'
+    - timer_interrupts: 'kFTM_TimeOverflowInterruptEnable'
+    - enable_irq: 'true'
+    - ftm_interrupt:
+      - IRQn: 'FTM2_IRQn'
+      - enable_priority: 'true'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - EnableTimerInInit: 'false'
+  - ftm_edge_aligned_mode:
+    - ftm_edge_aligned_channels_config: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const ftm_config_t FTM2_config = {
+  .prescale = kFTM_Prescale_Divide_1,
+  .bdmMode = kFTM_BdmMode_0,
+  .pwmSyncMode = kFTM_SoftwareTrigger,
+  .reloadPoints = kFTM_CntMax,
+  .faultMode = kFTM_Fault_Disable,
+  .faultFilterValue = 0,
+  .deadTimePrescale = kFTM_Deadtime_Prescale_1,
+  .deadTimeValue = 0,
+  .extTriggers = 0,
+  .chnlInitState = 0,
+  .chnlPolarity = 0,
+  .useGlobalTimeBase = false
+};
+
+void FTM2_init(void) {
+  FTM_Init(FTM2_PERIPHERAL, &FTM2_config);
+  FTM_SetTimerPeriod(FTM2_PERIPHERAL, ((FTM2_CLOCK_SOURCE/ (1U << (FTM2_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 76000) + 1);
+  FTM_EnableInterrupts(FTM2_PERIPHERAL, kFTM_TimeOverflowInterruptEnable);
+  /* Interrupt vector FTM2_IRQn priority settings in the NVIC */
+  NVIC_SetPriority(FTM2_IRQN, FTM2_IRQ_PRIORITY);
+  /* Enable interrupt FTM2_IRQn request in the NVIC */
+  EnableIRQ(FTM2_IRQN);
+}
+
+/***********************************************************************************************************************
  * GPIOA initialization code
  **********************************************************************************************************************/
 /* clang-format off */
@@ -182,6 +318,8 @@ void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
   FTM0_init();
+  FTM1_init();
+  FTM2_init();
   GPIOA_init();
   GPIOC_init();
 }

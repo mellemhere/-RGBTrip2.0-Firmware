@@ -4,16 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/ir_control.c \
 ../source/leds_control.c \
 ../source/lwip_ping_bm.c \
 ../source/semihost_hardfault.c 
 
 OBJS += \
+./source/ir_control.o \
 ./source/leds_control.o \
 ./source/lwip_ping_bm.o \
 ./source/semihost_hardfault.o 
 
 C_DEPS += \
+./source/ir_control.d \
 ./source/leds_control.d \
 ./source/lwip_ping_bm.d \
 ./source/semihost_hardfault.d 

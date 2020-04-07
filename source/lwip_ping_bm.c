@@ -29,6 +29,9 @@
 #include "peripherals.h"
 #include "lwip/apps/mqtt.h"
 #include "leds_control.h"
+#include "ir_control.h"
+#include "stdint.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -283,6 +286,17 @@ static void mqtt_message_published_cb(void *arg, err_t err)
 short dec = 0;
 int counterRGB = 0;
 int delay = 0;
+
+
+uint32_t cores[4]= {
+		0xF720DF,
+		0xF7A05F,
+		0xF7609F,
+		0xF7E01F
+};
+
+int i = 0;
+
 /*!
  * @brief Interrupt service for SysTick timer.
  */
@@ -291,21 +305,15 @@ void SysTick_Handler(void)
     time_isr();
 
 
-//    delay++;
-//    if(delay >= delayMax) {
-//		if(dec) {
-//			counterRGB--;
-//			if(counterRGB == 0) {
-//				dec = 0;
-//			}
-//		} else {
-//			counterRGB++;
-//			if(counterRGB == 232) {
-//				dec = 1;
-//			}
-//		}
-//		delay = 0;
-//    }
+    delay++;
+    if(delay >= 80) {
+    	ir_send_command(cores[i]);
+    	delay = 0;
+    	i++;
+    	if(i == 4) {
+    		i = 0;
+    	}
+    }
 
 
 }
@@ -339,6 +347,18 @@ void FTM0_IRQHANDLER(void) {
 }
 
 
+short toggle = 0;
+
+void FTM1_IRQHANDLER(void) {
+  FTM_ClearStatusFlags(FTM1_PERIPHERAL, kFTM_TimeOverflowFlag);
+  ir_tick();
+}
+
+
+void FTM2_IRQHANDLER(void) {
+  FTM_ClearStatusFlags(FTM2_PERIPHERAL, kFTM_TimeOverflowFlag);
+  ir_blast();
+}
 
 /*!
  * @brief Main function.
@@ -365,26 +385,26 @@ int main(void)
 
     time_init();
 
-    IP4_ADDR(&netif_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
-    IP4_ADDR(&netif_netmask, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3);
-    IP4_ADDR(&netif_gw, configGW_ADDR0, configGW_ADDR1, configGW_ADDR2, configGW_ADDR3);
-
-    lwip_init();
-
-    netif_add(&netif, &netif_ipaddr, &netif_netmask, &netif_gw, &enet_config, EXAMPLE_NETIF_INIT_FN, ethernet_input);
-    netif_set_default(&netif);
-    netif_set_up(&netif);
-
-    PRINTF("\r\n************************************************\r\n");
-    PRINTF(" Oi mundo! Minhas informacoes de rede sao: \r\n");
-    PRINTF("************************************************\r\n");
-    PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_ipaddr)[0], ((u8_t *)&netif_ipaddr)[1],
-           ((u8_t *)&netif_ipaddr)[2], ((u8_t *)&netif_ipaddr)[3]);
-    PRINTF(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&netif_netmask)[0], ((u8_t *)&netif_netmask)[1],
-           ((u8_t *)&netif_netmask)[2], ((u8_t *)&netif_netmask)[3]);
-    PRINTF(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_gw)[0], ((u8_t *)&netif_gw)[1],
-           ((u8_t *)&netif_gw)[2], ((u8_t *)&netif_gw)[3]);
-    PRINTF("************************************************\r\n");
+//    IP4_ADDR(&netif_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
+//    IP4_ADDR(&netif_netmask, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3);
+//    IP4_ADDR(&netif_gw, configGW_ADDR0, configGW_ADDR1, configGW_ADDR2, configGW_ADDR3);
+//
+//    lwip_init();
+//
+//    netif_add(&netif, &netif_ipaddr, &netif_netmask, &netif_gw, &enet_config, EXAMPLE_NETIF_INIT_FN, ethernet_input);
+//    netif_set_default(&netif);
+//    netif_set_up(&netif);
+//
+//    PRINTF("\r\n************************************************\r\n");
+//    PRINTF(" Oi mundo! Minhas informacoes de rede sao: \r\n");
+//    PRINTF("************************************************\r\n");
+//    PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_ipaddr)[0], ((u8_t *)&netif_ipaddr)[1],
+//           ((u8_t *)&netif_ipaddr)[2], ((u8_t *)&netif_ipaddr)[3]);
+//    PRINTF(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&netif_netmask)[0], ((u8_t *)&netif_netmask)[1],
+//           ((u8_t *)&netif_netmask)[2], ((u8_t *)&netif_netmask)[3]);
+//    PRINTF(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_gw)[0], ((u8_t *)&netif_gw)[1],
+//           ((u8_t *)&netif_gw)[2], ((u8_t *)&netif_gw)[3]);
+//    PRINTF("************************************************\r\n");
 
     ipaddr_aton(EXAMPLE_MQTT_SERVER_HOST, &mqtt_addr);
 

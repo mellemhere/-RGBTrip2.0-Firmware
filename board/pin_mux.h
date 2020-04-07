@@ -329,6 +329,13 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_INPUT_ADC_PIN 1U     /*!<@brief PORTA pin index: 1 */
                                             /* @} */
 
+/*! @name PORTA2 (number 36), IR_OUT
+  @{ */
+#define BOARD_INITPINS_IR_OUT_GPIO GPIOA /*!<@brief GPIO device name: GPIOA */
+#define BOARD_INITPINS_IR_OUT_PORT PORTA /*!<@brief PORT device name: PORTA */
+#define BOARD_INITPINS_IR_OUT_PIN 2U     /*!<@brief PORTA pin index: 2 */
+                                         /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
