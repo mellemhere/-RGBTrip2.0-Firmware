@@ -10,6 +10,8 @@ RM := rm -rf
 -include sources.mk
 -include utilities/subdir.mk
 -include startup/subdir.mk
+-include source/effects/effect/subdir.mk
+-include source/effects/subdir.mk
 -include source/subdir.mk
 -include lwip/src/netif/ppp/subdir.mk
 -include lwip/src/netif/subdir.mk

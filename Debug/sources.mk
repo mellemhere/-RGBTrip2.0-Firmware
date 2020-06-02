@@ -29,6 +29,8 @@ lwip/src/core/ipv4 \
 lwip/src/core/ipv6 \
 lwip/src/netif \
 lwip/src/netif/ppp \
+source/effects/effect \
+source/effects \
 source \
 startup \
 utilities \

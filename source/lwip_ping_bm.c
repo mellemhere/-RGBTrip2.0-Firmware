@@ -30,7 +30,9 @@
 #include "lwip/apps/mqtt.h"
 #include "leds_control.h"
 #include "ir_control.h"
+#include "effects/effect_controller.h"
 #include "stdint.h"
+#include "time.h"
 
 /*******************************************************************************
  * Definitions
@@ -40,36 +42,17 @@
 #define EXAMPLE_MQTT_CLIENT_ID "f"
 
 /*! @brief MQTT server host name or IP address. */
-//#define EXAMPLE_MQTT_SERVER_HOST "192.168.100.58"
-#define EXAMPLE_MQTT_SERVER_HOST "192.168.1.76"
+#define EXAMPLE_MQTT_SERVER_HOST "192.168.100.10"
+//#define EXAMPLE_MQTT_SERVER_HOST "192.168.1.76"
 
 /*! @brief MQTT server port number. */
 #define EXAMPLE_MQTT_SERVER_PORT 1885
 
-///* IP address configuration. */
-//#define configIP_ADDR0 192
-//#define configIP_ADDR1 168
-//#define configIP_ADDR2 100
-//#define configIP_ADDR3 51
-//
-///* Netmask configuration. */
-//#define configNET_MASK0 255
-//#define configNET_MASK1 255
-//#define configNET_MASK2 255
-//#define configNET_MASK3 0
-//
-///* Gateway address configuration. */
-//#define configGW_ADDR0 192
-//#define configGW_ADDR1 168
-//#define configGW_ADDR2 100
-//#define configGW_ADDR3 1
-
-
 /* IP address configuration. */
 #define configIP_ADDR0 192
 #define configIP_ADDR1 168
-#define configIP_ADDR2 1
-#define configIP_ADDR3 77
+#define configIP_ADDR2 100
+#define configIP_ADDR3 51
 
 /* Netmask configuration. */
 #define configNET_MASK0 255
@@ -80,8 +63,8 @@
 /* Gateway address configuration. */
 #define configGW_ADDR0 192
 #define configGW_ADDR1 168
-#define configGW_ADDR2 1
-#define configGW_ADDR3 254
+#define configGW_ADDR2 100
+#define configGW_ADDR3 1
 
 /* MAC address configuration. */
 #define configMAC_ADDR                     \
@@ -165,7 +148,13 @@ static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len
 }
 
 
-int delayMax = 4;
+uint32_t cores[4]= {
+		0xF720DF,
+		0xF7A05F,
+		0xF7609F,
+		0xF7E01F
+};
+
 /*!
  * @brief Called when recieved incoming published message fragment.
  */
@@ -175,19 +164,74 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
 
     LWIP_UNUSED_ARG(arg);
 
-    int rgb[3];
+    int command_type = data[0];
+    int tamanho_do_comando = 0;
 
-    for (i = 0; i < 3; i++)
-    {
-    	rgb[i] = data[i];
+    switch(command_type) {
+    /*
+     * EFEITO
+     */
+    case 0:
+    	tamanho_do_comando = 3;
+    	break;
+	/*
+	* LUZ CHURRAS
+	*/
+    case 1:
+    	tamanho_do_comando = 3;
+    	break;
+	/*
+	* LUZ POOL
+	*/
+    case 2:
+    	tamanho_do_comando = 1;
+    	break;
     }
 
-    rgb_set_color(rgb[0], rgb[1], rgb[2]);
+    int comando[3];
 
-//    if (flags & MQTT_DATA_FLAG_LAST)
-//    {
-//        PRINTF("\"\r\n");
-//    }
+    for (i = 0; i < tamanho_do_comando; i++)
+    {
+    	comando[i] = data[i+1];
+    }
+
+    /*
+     * Inicia/para efeitos
+     */
+    if(command_type == 0) {
+    	if(comando[0] == 255) {
+    		stopEffect();
+    	} else {
+    		if(hasEffect()) {
+    			stopEffect();
+    		}
+
+            startEffect(comando[0], comando[1], comando[2]);
+    	}
+
+    	return;
+    }
+
+    /*
+     * Muda cor da fita
+     */
+    if(command_type == 1) {
+		if(hasEffect()) {
+			stopEffect();
+		}
+
+        rgb_set_color(comando[0], comando[1], comando[2]);
+    	return;
+    }
+
+    /*
+     * Muda cor da piscina
+     */
+    if(command_type == 2) {
+    	ir_send_command(comando[0]);
+    	return;
+    }
+
 }
 
 /*!
@@ -275,27 +319,15 @@ static void connect_to_mqtt()
                         LWIP_CONST_CAST(void *, &mqtt_client_info), &mqtt_client_info);
 }
 
-/*!
- * @brief Called when publish request finishes.
- */
-static void mqtt_message_published_cb(void *arg, err_t err)
-{
-	// nao nos importamos
-}
+//
+///*!
+// * @brief Called when publish request finishes.
+// */
+//static void mqtt_message_published_cb(void *arg, err_t err)
+//{
+//	// nao nos importamos
+//}
 
-short dec = 0;
-int counterRGB = 0;
-int delay = 0;
-
-
-uint32_t cores[4]= {
-		0xF720DF,
-		0xF7A05F,
-		0xF7609F,
-		0xF7E01F
-};
-
-int i = 0;
 
 /*!
  * @brief Interrupt service for SysTick timer.
@@ -303,25 +335,13 @@ int i = 0;
 void SysTick_Handler(void)
 {
     time_isr();
-
-
-    delay++;
-    if(delay >= 80) {
-    	ir_send_command(cores[i]);
-    	delay = 0;
-    	i++;
-    	if(i == 4) {
-    		i = 0;
-    	}
-    }
-
-
 }
 
 
 
 short x = 0;
 int counter = 0;
+short effectTickFlag = 0;
 
 /* PORTC_IRQn interrupt handler */
 void PORTA_IRQHandler(void) {
@@ -344,20 +364,19 @@ void FTM0_IRQHANDLER(void) {
 	  FTM_StopTimer(FTM0_PERIPHERAL);
 	  counter = 0;
   }
+
 }
 
-
-short toggle = 0;
 
 void FTM1_IRQHANDLER(void) {
   FTM_ClearStatusFlags(FTM1_PERIPHERAL, kFTM_TimeOverflowFlag);
   ir_tick();
 }
 
-
 void FTM2_IRQHANDLER(void) {
   FTM_ClearStatusFlags(FTM2_PERIPHERAL, kFTM_TimeOverflowFlag);
   ir_blast();
+  effectTickFlag = 1;
 }
 
 /*!
@@ -385,26 +404,26 @@ int main(void)
 
     time_init();
 
-//    IP4_ADDR(&netif_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
-//    IP4_ADDR(&netif_netmask, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3);
-//    IP4_ADDR(&netif_gw, configGW_ADDR0, configGW_ADDR1, configGW_ADDR2, configGW_ADDR3);
-//
-//    lwip_init();
-//
-//    netif_add(&netif, &netif_ipaddr, &netif_netmask, &netif_gw, &enet_config, EXAMPLE_NETIF_INIT_FN, ethernet_input);
-//    netif_set_default(&netif);
-//    netif_set_up(&netif);
-//
-//    PRINTF("\r\n************************************************\r\n");
-//    PRINTF(" Oi mundo! Minhas informacoes de rede sao: \r\n");
-//    PRINTF("************************************************\r\n");
-//    PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_ipaddr)[0], ((u8_t *)&netif_ipaddr)[1],
-//           ((u8_t *)&netif_ipaddr)[2], ((u8_t *)&netif_ipaddr)[3]);
-//    PRINTF(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&netif_netmask)[0], ((u8_t *)&netif_netmask)[1],
-//           ((u8_t *)&netif_netmask)[2], ((u8_t *)&netif_netmask)[3]);
-//    PRINTF(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_gw)[0], ((u8_t *)&netif_gw)[1],
-//           ((u8_t *)&netif_gw)[2], ((u8_t *)&netif_gw)[3]);
-//    PRINTF("************************************************\r\n");
+    IP4_ADDR(&netif_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
+    IP4_ADDR(&netif_netmask, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3);
+    IP4_ADDR(&netif_gw, configGW_ADDR0, configGW_ADDR1, configGW_ADDR2, configGW_ADDR3);
+
+    lwip_init();
+
+    netif_add(&netif, &netif_ipaddr, &netif_netmask, &netif_gw, &enet_config, EXAMPLE_NETIF_INIT_FN, ethernet_input);
+    netif_set_default(&netif);
+    netif_set_up(&netif);
+
+    PRINTF("\r\n************************************************\r\n");
+    PRINTF(" Oi mundo! Minhas informacoes de rede sao: \r\n");
+    PRINTF("************************************************\r\n");
+    PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_ipaddr)[0], ((u8_t *)&netif_ipaddr)[1],
+           ((u8_t *)&netif_ipaddr)[2], ((u8_t *)&netif_ipaddr)[3]);
+    PRINTF(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&netif_netmask)[0], ((u8_t *)&netif_netmask)[1],
+           ((u8_t *)&netif_netmask)[2], ((u8_t *)&netif_netmask)[3]);
+    PRINTF(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_gw)[0], ((u8_t *)&netif_gw)[1],
+           ((u8_t *)&netif_gw)[2], ((u8_t *)&netif_gw)[3]);
+    PRINTF("************************************************\r\n");
 
     ipaddr_aton(EXAMPLE_MQTT_SERVER_HOST, &mqtt_addr);
 
@@ -420,9 +439,18 @@ int main(void)
 
     connect_to_mqtt();
 
+    time_t t;
+    srand(time(&t));
+
+	FTM_StartTimer(FTM2_PERIPHERAL, kFTM_SystemClock);
     while (1)
     {
     	rgb_tick(counter);
+
+    	if(effectTickFlag) {
+    		effectTick();
+    		effectTickFlag = 0;
+    	}
 
         /* Poll the driver, get any outstanding frames */
         ethernetif_input(&netif);

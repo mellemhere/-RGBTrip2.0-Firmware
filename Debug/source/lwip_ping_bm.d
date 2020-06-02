@@ -57,7 +57,7 @@ source/lwip_ping_bm.o source/lwip_ping_bm.d: ../source/lwip_ping_bm.c \
  ../source/leds_control.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12_features.h \
- ../source/ir_control.h
+ ../source/ir_control.h ../source/effects/effect_controller.h
 
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\lwip\src\include/lwip/opt.h:
 
@@ -176,3 +176,5 @@ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12.h:
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12_features.h:
 
 ../source/ir_control.h:
+
+../source/effects/effect_controller.h:

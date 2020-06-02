@@ -154,13 +154,6 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LED2_B_PIN 10U    /*!<@brief PORTC pin index: 10 */
                                          /* @} */
 
-/*! @name PORTB20 (number 66), LED3_R
-  @{ */
-#define BOARD_INITPINS_LED3_R_GPIO GPIOB /*!<@brief GPIO device name: GPIOB */
-#define BOARD_INITPINS_LED3_R_PORT PORTB /*!<@brief PORT device name: PORTB */
-#define BOARD_INITPINS_LED3_R_PIN 20U    /*!<@brief PORTB pin index: 20 */
-                                         /* @} */
-
 /*! @name PORTB18 (number 64), LED3_G
   @{ */
 #define BOARD_INITPINS_LED3_G_GPIO GPIOB /*!<@brief GPIO device name: GPIOB */
@@ -334,6 +327,13 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_IR_OUT_GPIO GPIOA /*!<@brief GPIO device name: GPIOA */
 #define BOARD_INITPINS_IR_OUT_PORT PORTA /*!<@brief PORT device name: PORTA */
 #define BOARD_INITPINS_IR_OUT_PIN 2U     /*!<@brief PORTA pin index: 2 */
+                                         /* @} */
+
+/*! @name PORTB20 (number 66), LED3_R
+  @{ */
+#define BOARD_INITPINS_LED3_R_GPIO GPIOB /*!<@brief GPIO device name: GPIOB */
+#define BOARD_INITPINS_LED3_R_PORT PORTB /*!<@brief PORT device name: PORTB */
+#define BOARD_INITPINS_LED3_R_PIN 20U    /*!<@brief PORTB pin index: 20 */
                                          /* @} */
 
 /*!

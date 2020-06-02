@@ -1,0 +1,5 @@
+camaleao.c:19:7:camaleao_getRunnables	4	static
+camaleao.c:24:6:newColor	8	static
+camaleao.c:30:6:init	8	static
+camaleao.c:35:6:changeProp	16	static
+camaleao.c:39:6:tick	16	static

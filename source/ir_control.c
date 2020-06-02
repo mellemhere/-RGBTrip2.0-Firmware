@@ -9,20 +9,22 @@
 uint32_t current_command = 0;
 short ledState = 0;
 short toggleLed = 0;
+short in_blast_mode = 0;
 
 void ir_blast() {
-	if(toggleLed == 1) {
-		if(ledState == 0) {
-			GPIO_PinWrite(BOARD_INITPINS_IR_OUT_GPIO, BOARD_INITPINS_IR_OUT_PIN, 1);
-			ledState = 1;
+	if(in_blast_mode) {
+		if(toggleLed == 1) {
+			if(ledState == 0) {
+				GPIO_PinWrite(BOARD_INITPINS_IR_OUT_GPIO, BOARD_INITPINS_IR_OUT_PIN, 1);
+				ledState = 1;
+			} else {
+				GPIO_PinWrite(BOARD_INITPINS_IR_OUT_GPIO, BOARD_INITPINS_IR_OUT_PIN, 0);
+				ledState = 0;
+			}
 		} else {
 			GPIO_PinWrite(BOARD_INITPINS_IR_OUT_GPIO, BOARD_INITPINS_IR_OUT_PIN, 0);
-			ledState = 0;
 		}
-	} else {
-		GPIO_PinWrite(BOARD_INITPINS_IR_OUT_GPIO, BOARD_INITPINS_IR_OUT_PIN, 0);
 	}
-
 }
 
 /*
@@ -32,14 +34,13 @@ void ir_blast() {
  *  3 => COMANDO
  *  4 => ALTA POR 1 tick
  */
-int estao = 0;
+int estadoDoEnvio = 0;
 int tick_count = 0;
 int tick_toggle = 0;
-int bits_sent = 0;
 int position = 23;
 
 void ir_tick() {
-	switch (estao) {
+	switch (estadoDoEnvio) {
 	case 0: // ------ PULSO ALTO
 		if(tick_count <= 16) {
 			toggleLed = 1;
@@ -47,7 +48,7 @@ void ir_tick() {
 			tick_count++;
 			if(tick_count == 16) {
 				tick_count = 0;
-				estao++;
+				estadoDoEnvio++;
 			}
 		}
 		break;
@@ -58,7 +59,7 @@ void ir_tick() {
 			tick_count++;
 			if(tick_count == 8) {
 				tick_count = 0;
-				estao++;
+				estadoDoEnvio++;
 			}
 		}
 		break;
@@ -78,13 +79,13 @@ void ir_tick() {
 				tick_count = 0;
 				tick_toggle = 0;
 				toggleLed = 0;
-				estao++;
+				estadoDoEnvio++;
 			}
 		}
 		break;
 	case 3:
 		if(position == -1 && tick_toggle == 0) {
-			estao++;
+			estadoDoEnvio++;
 			tick_count = 0;
 			tick_toggle = 0;
 		} else {
@@ -110,8 +111,9 @@ void ir_tick() {
 			tick_count = 1;
 		} else {
 			toggleLed = 0;
-			estao = 0;
+			estadoDoEnvio = -1; // Para maquina de estado
 			FTM_StopTimer(FTM1_PERIPHERAL);
+			in_blast_mode = 0;
 		}
 		break;
 	}
@@ -121,8 +123,8 @@ void ir_tick() {
 void ir_send_command(uint32_t comand) {
 	current_command = comand;
 	position = 23;
-	estao = 0;
+	estadoDoEnvio = 0;
 	tick_count = 0;
 	FTM_StartTimer(FTM1_PERIPHERAL, kFTM_SystemClock);
-	FTM_StartTimer(FTM2_PERIPHERAL, kFTM_SystemClock);
+	in_blast_mode = 1;
 }
