@@ -197,6 +197,21 @@ void rgb_set(int stripIndex, int r, int g, int b) {
 
 
 void rgb_set_color(int r, int g, int b) {
+
+	if(r > 255) {
+		r = 255;
+	}
+
+
+	if(g > 255) {
+		g = 255;
+	}
+
+
+	if(b > 255) {
+		b = 255;
+	}
+
 	for(int stripIndex = 0; stripIndex < RGB_NUMBER_OF_STRIPS; stripIndex++) {
 		rgb_set(stripIndex, r, g, b);
 	}
@@ -242,39 +257,28 @@ void rgb_tick(int rgb_current_tick) {
 		 * RED
 		 * 255 -> 0
 		 */
-		if(rgb_strips[stripIndex].r_intensity >= intMax) {
-			if(rgb_strips[stripIndex].r_intensity <= rgb_current_tick) {
-				GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, DESLIGA);
-			} else {
-				GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, LIGA);
-			}
-		} else {
+		if(rgb_strips[stripIndex].r_intensity <= rgb_current_tick) {
 			GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, DESLIGA);
+		} else {
+			GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, LIGA);
 		}
+
 		/*
 		 * GREEN
 		 */
-		if(rgb_strips[stripIndex].g_intensity >= intMax) {
-			if(rgb_strips[stripIndex].g_intensity <= rgb_current_tick) {
-				GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, DESLIGA);
-			} else {
-				GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, LIGA);
-			}
-		} else {
+		if(rgb_strips[stripIndex].g_intensity <= rgb_current_tick) {
 			GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, DESLIGA);
+		} else {
+			GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, LIGA);
 		}
 
 		/*
 		 * BLUE
 		 */
-		if(rgb_strips[stripIndex].b_intensity >= intMax) {
-			if(rgb_strips[stripIndex].b_intensity <= rgb_current_tick) {
-				GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, DESLIGA);
-			} else {
-				GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, LIGA);
-			}
-		} else {
+		if(rgb_strips[stripIndex].b_intensity <= rgb_current_tick) {
 			GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, DESLIGA);
+		} else {
+			GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, LIGA);
 		}
 	}
 }

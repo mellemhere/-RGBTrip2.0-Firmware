@@ -398,8 +398,7 @@ void FTM2_IRQHANDLER(void) {
   ir_blast();
   effectTickFlag = 1;
 }
-#define DEMO_ADC16_BASE ADC0
-#define DEMO_ADC16_CHANNEL_GROUP 0U
+
 /*!
  * @brief Main function.
  */
@@ -467,43 +466,16 @@ int main(void)
 
     adc16ChannelConfigStruct.channelNumber                        = 12U;
     adc16ChannelConfigStruct.enableInterruptOnConversionCompleted = false;
-    ADC16_SetChannelConfig(DEMO_ADC16_BASE, DEMO_ADC16_CHANNEL_GROUP, &adc16ChannelConfigStruct);
+
+
+    ADC16_SetChannelConfig(ADC0, 0U, &adc16ChannelConfigStruct);
 
 	FTM_StartTimer(FTM2_PERIPHERAL, kFTM_SystemClock);
 
+
+    startEffect(4, 100, 100);
     while (1)
     {
-
-    	/*
-    	 *  3300 -> TICK_MAX
-    	 *  x -> RESULT
-    	 *  3300 * RESULTADO = x * TICK_MAX
-    	 *
-    	 *
-    	 *  resultado = (x * TICK_MAX ) /3300
-    	 */
-
-    	uint32_t valorADC = ADC16_GetChannelConversionValue(DEMO_ADC16_BASE, DEMO_ADC16_CHANNEL_GROUP);
-    	/*
-    	 *  4095     -> TICK_MAX
-    	 *  LEITURA  ->  x
-    	 *
-    	 *  4095*x = TICK_max * leitura
-    	 *
-    	 *
-    	 */
-
-    	uint32_t intesidade_max = (TICKS_MAX+50) - ((valorADC * TICKS_MAX) / 4095);
-
-    	if(intesidade_max > TICKS_MAX) {
-    		intesidade_max = TICKS_MAX;
-    	}
-
-    	rgb_setInt(intesidade_max);
-
-//    	rgb_set_color(0, 0, 0);
-//    	rgb_set(1, 0, 0, 0);
-
     	rgb_tick(counter);
 
     	if(effectTickFlag) {

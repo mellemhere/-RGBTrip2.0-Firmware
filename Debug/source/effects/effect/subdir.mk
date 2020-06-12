@@ -6,17 +6,20 @@
 C_SRCS += \
 ../source/effects/effect/camaleao.c \
 ../source/effects/effect/strobo.c \
-../source/effects/effect/stroboColorido.c 
+../source/effects/effect/stroboColorido.c \
+../source/effects/effect/stroboDoSom.c 
 
 OBJS += \
 ./source/effects/effect/camaleao.o \
 ./source/effects/effect/strobo.o \
-./source/effects/effect/stroboColorido.o 
+./source/effects/effect/stroboColorido.o \
+./source/effects/effect/stroboDoSom.o 
 
 C_DEPS += \
 ./source/effects/effect/camaleao.d \
 ./source/effects/effect/strobo.d \
-./source/effects/effect/stroboColorido.d 
+./source/effects/effect/stroboColorido.d \
+./source/effects/effect/stroboDoSom.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

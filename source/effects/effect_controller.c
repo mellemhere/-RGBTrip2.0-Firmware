@@ -28,6 +28,9 @@ void startEffect(int effectID, int effectSpeed, int effectIntensity) {
 	case 3:
 		memcpy(effect_runnable, stroboColorido_getRunnables(), sizeof(effect_runnable));
 		break;
+	case 4:
+		memcpy(effect_runnable, stroboDoSom_getRunnables(), sizeof(effect_runnable));
+		break;
 	default:
 		/*
 		 * Na duvida faz camaleao

@@ -1,0 +1,6 @@
+fsl_adc16.h:484:24:ADC16_GetChannelConversionValue	16	static
+stroboDoSom.c:31:6:sds_newColor	4	static
+stroboDoSom.c:42:7:stroboDoSom_getRunnables	4	static
+stroboDoSom.c:46:6:init	8	static
+stroboDoSom.c:50:6:changeProp	16	static
+stroboDoSom.c:53:6:tick	48	static

@@ -1,6 +1,5 @@
 core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static
 fsl_common.h:460:28:EnableIRQ	16	static
-fsl_adc16.h:484:24:ADC16_GetChannelConversionValue	16	static
 fsl_ftm.h:670:20:FTM_StartTimer	24	static
 fsl_ftm.h:684:20:FTM_StopTimer	16	static
 lwip_ping_bm.c:125:13:mqtt_topic_subscribed_cb	24	static
@@ -14,4 +13,4 @@ lwip_ping_bm.c:364:6:PORTA_IRQHandler	8	static
 lwip_ping_bm.c:379:6:FTM0_IRQHandler	8	static
 lwip_ping_bm.c:391:6:FTM1_IRQHandler	8	static
 lwip_ping_bm.c:396:6:FTM2_IRQHandler	8	static
-lwip_ping_bm.c:406:5:main	136	static
+lwip_ping_bm.c:405:5:main	128	static
