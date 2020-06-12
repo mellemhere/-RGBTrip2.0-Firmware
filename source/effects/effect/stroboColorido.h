@@ -5,7 +5,6 @@
  *      Author: LifeB
  */
 #include "leds_control.h"
-#include "../effect_controller.h"
 
 void* stroboColorido_getRunnables();
 

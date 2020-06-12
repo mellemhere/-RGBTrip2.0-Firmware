@@ -1,3 +1,11 @@
+/*
+ * Efeitos
+ */
+#include "effect/camaleao.h"
+#include "effect/strobo.h"
+
+
+
 void startEffect(int effectID, int effectSpeed, int effectIntensity);
 void stopEffect();
 void effectTick();

@@ -48,7 +48,7 @@
                <pin_label pin_num="31" pin_signal="ADC0_SE17/PTE24/UART4_TX/I2C0_SCL/EWM_OUT_b" label="LED10_B" identifier="ACCEL_SCL;LED10_B"/>
                <pin_label pin_num="33" pin_signal="PTE26/ENET_1588_CLKIN/UART4_CTS_b/RTC_CLKOUT/USB_CLKIN" label="LED6_R" identifier="LED_GREEN;LED6_R"/>
                <pin_label pin_num="66" pin_signal="PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT" label="LED3_R" identifier="RF_WIFI_CE;LED3_R"/>
-               <pin_label pin_num="55" pin_signal="ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3" label="LED1_R" identifier="ADC0_SE12;LED1_R"/>
+               <pin_label pin_num="55" pin_signal="ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3" label="ADC_DIREITA" identifier="ADC0_SE12;LED1_R;ADC_DIREITA"/>
                <pin_label pin_num="56" pin_signal="ADC0_SE13/PTB3/I2C0_SDA/UART0_CTS_b/UART0_COL_b/ENET0_1588_TMR1/FTM0_FLT0" label="LED1_G" identifier="LED1_G"/>
                <pin_label pin_num="58" pin_signal="ADC1_SE14/PTB10/SPI1_PCS0/UART3_RX/FB_AD19/FTM0_FLT1" label="LED1_B" identifier="LED1_B"/>
                <pin_label pin_num="59" pin_signal="ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2" label="LED2_R" identifier="LED2_R"/>
@@ -56,6 +56,7 @@
                <pin_label pin_num="82" pin_signal="ADC1_SE6b/PTC10/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5" label="LED2_B" identifier="LED2_B"/>
                <pin_label pin_num="98" pin_signal="ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/UART0_COL_b/FTM0_CH5/FB_AD1/EWM_OUT_b/SPI1_SCK" label="LED7_G" identifier="WIFI_SCK;LED7_G"/>
                <pin_label pin_num="100" pin_signal="PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN" label="LED6_B" identifier="WIFI_MISO;LED6_B"/>
+               <pin_label pin_num="97" pin_signal="PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FB_AD2/EWM_IN/SPI1_PCS0" label="LED1_R" identifier="WIFI_CS;LED1_R"/>
                <pin_label pin_num="87" pin_signal="PTC15/UART4_TX/FB_AD24" label="INPUT_ADC" identifier="INPUT_ADC"/>
                <pin_label pin_num="34" pin_signal="PTA0/UART0_CTS_b/UART0_COL_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK" label="LED3_R" identifier="LED3_R"/>
                <pin_label pin_num="68" pin_signal="PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT" label="LED_RED" identifier="LED_RED"/>
@@ -81,6 +82,11 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="Peripheral" resourceId="GPIOA" description="Peripheral GPIOA is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="Peripheral" resourceId="ADC0" description="Peripheral ADC0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -127,13 +133,6 @@
                   <pin peripheral="ENET" signal="RMII_RXER" pin_num="39" pin_signal="PTA5/USB_CLKIN/FTM0_CH2/RMII0_RXER/MII0_RXER/CMP2_OUT/I2S0_TX_BCLK/JTAG_TRST_b"/>
                   <pin peripheral="GPIOB" signal="GPIO, 22" pin_num="68" pin_signal="PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT">
                      <pin_features>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                        <pin_feature name="drive_strength" value="high"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIOB" signal="GPIO, 2" pin_num="55" pin_signal="ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3">
-                     <pin_features>
-                        <pin_feature name="identifier" value="LED1_R"/>
                         <pin_feature name="direction" value="OUTPUT"/>
                         <pin_feature name="drive_strength" value="high"/>
                      </pin_features>
@@ -191,6 +190,8 @@
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
                         <pin_feature name="drive_strength" value="high"/>
+                        <pin_feature name="pull_select" value="down"/>
+                        <pin_feature name="pull_enable" value="enable"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIOC" signal="GPIO, 9" pin_num="81" pin_signal="ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0">
@@ -324,7 +325,7 @@
                         <pin_feature name="direction" value="INPUT"/>
                         <pin_feature name="gpio_interrupt" value="kPORT_InterruptRisingEdge"/>
                         <pin_feature name="drive_strength" value="low"/>
-                        <pin_feature name="pull_select" value="down"/>
+                        <pin_feature name="pull_select" value="up"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIOA" signal="GPIO, 2" pin_num="36" pin_signal="PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO">
@@ -340,6 +341,18 @@
                         <pin_feature name="drive_strength" value="high"/>
                         <pin_feature name="pull_select" value="up"/>
                         <pin_feature name="pull_enable" value="disable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOD" signal="GPIO, 4" pin_num="97" pin_signal="PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FB_AD2/EWM_IN/SPI1_PCS0">
+                     <pin_features>
+                        <pin_feature name="identifier" value="LED1_R"/>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="drive_strength" value="high"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="ADC0" signal="SE, 12" pin_num="55" pin_signal="ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3">
+                     <pin_features>
+                        <pin_feature name="identifier" value="ADC_DIREITA"/>
                      </pin_features>
                   </pin>
                </pins>
@@ -477,6 +490,16 @@
       </dcdx>
       <periphs name="Peripherals" version="7.0" enabled="true" update_project_code="true">
          <dependencies>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.adc16" description="ADC16 Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.adc16" description="Unsupported version of the ADC16 Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">2.0.0</data>
+               </feature>
+            </dependency>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="FTM Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data type="Boolean">true</data>
@@ -527,6 +550,37 @@
                   </dependency>
                </dependencies>
                <instances>
+                  <instance name="ADC0" uuid="34925a8c-8cd5-422f-9f43-b8a994abf23e" type="adc16" type_id="adc16_7d827be2dc433dc756d94a7ce88cbcc5" mode="ADC" peripheral="ADC0" enabled="true" comment="" custom_name_enabled="false">
+                     <config_set name="fsl_adc16">
+                        <struct name="adc16_config">
+                           <setting name="referenceVoltageSource" value="kADC16_ReferenceVoltageSourceVref"/>
+                           <setting name="clockSource" value="kADC16_ClockSourceAsynchronousClock"/>
+                           <setting name="enableAsynchronousClock" value="true"/>
+                           <setting name="clockDivider" value="kADC16_ClockDivider8"/>
+                           <setting name="resolution" value="kADC16_ResolutionSE12Bit"/>
+                           <setting name="longSampleMode" value="kADC16_LongSampleDisabled"/>
+                           <setting name="enableHighSpeed" value="true"/>
+                           <setting name="enableLowPower" value="false"/>
+                           <setting name="enableContinuousConversion" value="true"/>
+                        </struct>
+                        <setting name="adc16_channel_mux_mode" value="kADC16_ChannelMuxA"/>
+                        <struct name="adc16_hardware_compare_config">
+                           <setting name="hardwareCompareModeEnable" value="false"/>
+                        </struct>
+                        <setting name="doAutoCalibration" value="true"/>
+                        <setting name="trigger" value="false"/>
+                        <setting name="hardwareAverageConfiguration" value="kADC16_HardwareAverageDisabled"/>
+                        <setting name="enable_dma" value="false"/>
+                        <setting name="enable_irq" value="false"/>
+                        <struct name="adc_interrupt">
+                           <setting name="IRQn" value="ADC0_IRQn"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                        <array name="adc16_channels_config"/>
+                     </config_set>
+                  </instance>
                   <instance name="FTM0" uuid="56ceccb0-c8bd-4695-be02-1a8bb967b53c" type="ftm" type_id="ftm_04a15ae4af2b404bf2ae403c3dbe98b3" mode="EdgeAligned" peripheral="FTM0" enabled="true" comment="" custom_name_enabled="false">
                      <config_set name="ftm_main_config">
                         <struct name="ftm_config">
@@ -709,7 +763,7 @@
             <component name="system" uuid="030cbfc5-3981-45f5-84d3-def64e89db01" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions"/>
             </component>
-            <component name="msg" uuid="0df13d59-af1f-432c-af9f-2ad533ad62dc" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="c8b66e04-0771-481f-abd9-7c70125c8736" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
          </components>

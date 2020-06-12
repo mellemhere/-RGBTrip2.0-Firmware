@@ -87,8 +87,8 @@ RGB_Strip rgb_strips[RGB_NUMBER_OF_STRIPS] = {
 	 .r_pin = 3, // 2
 	 //GREEN
 	 .g_intensity = 100,
-	 .g_base = GPIOB,
-	 .g_pin = 2, // 10
+	 .g_base = GPIOD,
+	 .g_pin = 4, // 10
 	 //BLUE
 	 .b_intensity = 100,
 	 .b_base = GPIOB,
@@ -165,12 +165,12 @@ RGB_Strip rgb_strips[RGB_NUMBER_OF_STRIPS] = {
 	{
 	 //RED
 	 .r_intensity = 100,
-	 .r_base = GPIOB,
-	 .r_pin = 9,
+	 .r_base = GPIOE,
+	 .r_pin = 26,
 	 //GREEN
 	 .g_intensity = 100,
-	 .g_base = GPIOE,
-	 .g_pin = 26,
+	 .g_base = GPIOB,
+	 .g_pin = 9,
 	 //BLUE
 	 .b_intensity = 100,
 	 .b_base = GPIOD,
@@ -181,9 +181,12 @@ RGB_Strip rgb_strips[RGB_NUMBER_OF_STRIPS] = {
 
 
 short currentState = 0;
+uint32_t intMax = 0;
 
 int rgb_convert(int value) {
-	return TICKS_MAX - (0.909 * value);
+    return TICKS_MAX - (value * 0.8823);
+//	return TICKS_MAX - (0.90 * value);
+//////	return TICKS_MAX - (0.90 * value);
 }
 
 void rgb_set(int stripIndex, int r, int g, int b) {
@@ -225,31 +228,53 @@ void toogleState() {
 	}
 }
 
+void rgb_setInt(uint32_t valor) {
+	intMax = valor;
+}
+
+#define LIGA 0
+#define DESLIGA 1
+
 void rgb_tick(int rgb_current_tick) {
+	// && (intMax != 0 && rgb_current_tick >= intMax)
 	for(int stripIndex = 0; stripIndex < RGB_NUMBER_OF_STRIPS; stripIndex++) {
 		/*
 		 * RED
+		 * 255 -> 0
 		 */
-		if(rgb_strips[stripIndex].r_intensity <= rgb_current_tick) {
-			GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, 1);
+		if(rgb_strips[stripIndex].r_intensity >= intMax) {
+			if(rgb_strips[stripIndex].r_intensity <= rgb_current_tick) {
+				GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, DESLIGA);
+			} else {
+				GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, LIGA);
+			}
 		} else {
-			GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, 0);
+			GPIO_PinWrite(rgb_strips[stripIndex].r_base, rgb_strips[stripIndex].r_pin, DESLIGA);
 		}
 		/*
 		 * GREEN
 		 */
-		if(rgb_strips[stripIndex].g_intensity <= rgb_current_tick) {
-			GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, 1);
+		if(rgb_strips[stripIndex].g_intensity >= intMax) {
+			if(rgb_strips[stripIndex].g_intensity <= rgb_current_tick) {
+				GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, DESLIGA);
+			} else {
+				GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, LIGA);
+			}
 		} else {
-			GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, 0);
+			GPIO_PinWrite(rgb_strips[stripIndex].g_base, rgb_strips[stripIndex].g_pin, DESLIGA);
 		}
+
 		/*
 		 * BLUE
 		 */
-		if(rgb_strips[stripIndex].b_intensity <= rgb_current_tick) {
-			GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, 1);
+		if(rgb_strips[stripIndex].b_intensity >= intMax) {
+			if(rgb_strips[stripIndex].b_intensity <= rgb_current_tick) {
+				GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, DESLIGA);
+			} else {
+				GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, LIGA);
+			}
 		} else {
-			GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, 0);
+			GPIO_PinWrite(rgb_strips[stripIndex].b_base, rgb_strips[stripIndex].b_pin, DESLIGA);
 		}
 	}
 }

@@ -155,6 +155,8 @@ uint32_t cores[4]= {
 		0xF7E01F
 };
 
+int corteDoSom = 1800;
+
 /*!
  * @brief Called when recieved incoming published message fragment.
  */
@@ -186,6 +188,12 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
     case 2:
     	tamanho_do_comando = 1;
     	break;
+	/*
+	* CORTE DO SOM
+	*/
+	case 3:
+		tamanho_do_comando = 1;
+		break;
     }
 
     int comando[3];
@@ -229,6 +237,14 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
      */
     if(command_type == 2) {
     	ir_send_command(comando[0]);
+    	return;
+    }
+
+    /*
+     * Corte do som
+     */
+    if(command_type == 3) {
+    	corteDoSom = comando[0];
     	return;
     }
 
@@ -342,12 +358,16 @@ void SysTick_Handler(void)
 short x = 0;
 int counter = 0;
 short effectTickFlag = 0;
+short isRunning = 0;
 
 /* PORTC_IRQn interrupt handler */
 void PORTA_IRQHandler(void) {
 	GPIO_PortClearInterruptFlags(BOARD_INITPINS_INPUT_ADC_GPIO, 1U << BOARD_INITPINS_INPUT_ADC_PIN);
-	counter = 0;
-	FTM_StartTimer(FTM0_PERIPHERAL, kFTM_SystemClock);
+	if(isRunning == 0) {
+		counter = 0;
+		isRunning = 1;
+		FTM_StartTimer(FTM0_PERIPHERAL, kFTM_SystemClock);
+	}
 }
 
 
@@ -362,9 +382,9 @@ void FTM0_IRQHANDLER(void) {
   /*  Place your code here */
   if(counter == TICKS_MAX) {
 	  FTM_StopTimer(FTM0_PERIPHERAL);
+	  isRunning = 0;
 	  counter = 0;
   }
-
 }
 
 
@@ -378,12 +398,15 @@ void FTM2_IRQHANDLER(void) {
   ir_blast();
   effectTickFlag = 1;
 }
-
+#define DEMO_ADC16_BASE ADC0
+#define DEMO_ADC16_CHANNEL_GROUP 0U
 /*!
  * @brief Main function.
  */
 int main(void)
 {
+    adc16_channel_config_t adc16ChannelConfigStruct;
+
     struct netif netif;
 
     ip4_addr_t netif_ipaddr, netif_netmask, netif_gw;
@@ -442,9 +465,45 @@ int main(void)
     time_t t;
     srand(time(&t));
 
+    adc16ChannelConfigStruct.channelNumber                        = 12U;
+    adc16ChannelConfigStruct.enableInterruptOnConversionCompleted = false;
+    ADC16_SetChannelConfig(DEMO_ADC16_BASE, DEMO_ADC16_CHANNEL_GROUP, &adc16ChannelConfigStruct);
+
 	FTM_StartTimer(FTM2_PERIPHERAL, kFTM_SystemClock);
+
     while (1)
     {
+
+    	/*
+    	 *  3300 -> TICK_MAX
+    	 *  x -> RESULT
+    	 *  3300 * RESULTADO = x * TICK_MAX
+    	 *
+    	 *
+    	 *  resultado = (x * TICK_MAX ) /3300
+    	 */
+
+    	uint32_t valorADC = ADC16_GetChannelConversionValue(DEMO_ADC16_BASE, DEMO_ADC16_CHANNEL_GROUP);
+    	/*
+    	 *  4095     -> TICK_MAX
+    	 *  LEITURA  ->  x
+    	 *
+    	 *  4095*x = TICK_max * leitura
+    	 *
+    	 *
+    	 */
+
+    	uint32_t intesidade_max = (TICKS_MAX+50) - ((valorADC * TICKS_MAX) / 4095);
+
+    	if(intesidade_max > TICKS_MAX) {
+    		intesidade_max = TICKS_MAX;
+    	}
+
+    	rgb_setInt(intesidade_max);
+
+//    	rgb_set_color(0, 0, 0);
+//    	rgb_set(1, 0, 0, 0);
+
     	rgb_tick(counter);
 
     	if(effectTickFlag) {

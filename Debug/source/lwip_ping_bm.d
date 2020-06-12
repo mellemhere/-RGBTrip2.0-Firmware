@@ -49,6 +49,7 @@ source/lwip_ping_bm.o source/lwip_ping_bm.d: ../source/lwip_ping_bm.c \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\board/pin_mux.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\board/clock_config.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\board/peripherals.h \
+ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_adc16.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_clock.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_ftm.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\lwip\src\include/lwip/apps/mqtt.h \
@@ -57,7 +58,10 @@ source/lwip_ping_bm.o source/lwip_ping_bm.d: ../source/lwip_ping_bm.c \
  ../source/leds_control.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12_features.h \
- ../source/ir_control.h ../source/effects/effect_controller.h
+ ../source/ir_control.h ../source/effects/effect_controller.h \
+ ../source/effects/effect/camaleao.h \
+ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\source/leds_control.h \
+ ../source/effects/effect/strobo.h
 
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\lwip\src\include/lwip/opt.h:
 
@@ -159,6 +163,8 @@ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\board/clock_config.h:
 
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\board/peripherals.h:
 
+D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_adc16.h:
+
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_clock.h:
 
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_ftm.h:
@@ -178,3 +184,9 @@ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12_features.h:
 ../source/ir_control.h:
 
 ../source/effects/effect_controller.h:
+
+../source/effects/effect/camaleao.h:
+
+D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\source/leds_control.h:
+
+../source/effects/effect/strobo.h:

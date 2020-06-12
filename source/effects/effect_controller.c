@@ -2,13 +2,6 @@
 #include "fsl_gpio.h"
 #include "time.h"
 
-/*
- * Efeitos
- */
-#include "effect/camaleao.h"
-#include "effect/strobo.h"
-
-
 void (*effect_runnable[3])();
 
 /*
@@ -34,6 +27,13 @@ void startEffect(int effectID, int effectSpeed, int effectIntensity) {
 		break;
 	case 3:
 		memcpy(effect_runnable, stroboColorido_getRunnables(), sizeof(effect_runnable));
+		break;
+	default:
+		/*
+		 * Na duvida faz camaleao
+		 */
+		currentEffectID = 1;
+		memcpy(effect_runnable, camaleao_getRunnables(), sizeof(effect_runnable));
 		break;
 	}
 

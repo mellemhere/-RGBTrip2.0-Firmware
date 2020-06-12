@@ -50,7 +50,7 @@ typedef struct RGB {
 
 
 #define RGB_NUMBER_OF_STRIPS 10
-#define TICKS_MAX 242 // ruim eh 232 bom eh 242
+#define TICKS_MAX 225 // ruim eh 232 bom eh 242
 
 void rgb_set(int stripIndex, int r, int g, int b);
 void turnStripState(short value);

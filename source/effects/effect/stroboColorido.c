@@ -5,28 +5,28 @@ static void init();
 static void changeProp(int intensity, int velocity);
 static void tick();
 
-uint16_t eff_sc_counter = 0;
+uint16_t stroboColorido_eff_counter = 0;
 short toggleStateS = 0;
 
-static void (*effect_runnable[3])() = {
+static void (*stroboColorido_effect_runnable[3])() = {
 	init,
 	changeProp,
 	tick
 };
 
 void* stroboColorido_getRunnables(){
- return effect_runnable;
+ return stroboColorido_effect_runnable;
 }
 
 
 uint8_t colors[7][3] = {
-	{255,0,0},
-	{0,255,0},
-	{0,0,255},
-	{255,255,0},
-	{255,0,255},
-	{255,255,255},
-	{0,255,255},
+	{200,0,0},
+	{0,200,0},
+	{0,0,200},
+	{200,200,0},
+	{200,0,200},
+	{200,200,200},
+	{0,200,200},
 };
 
 RGB nextColor;
@@ -48,19 +48,20 @@ void newColorS() {
 
 void init() {
 	newColorS();
+	stroboColorido_eff_counter = 0;
 }
 
 void changeProp(int intensity, int velocity) {
 }
 
 void tick() {
-	eff_sc_counter++;
+	stroboColorido_eff_counter++;
 
-	if(eff_sc_counter == 3000 && toggleStateS == 0) {
+	if(stroboColorido_eff_counter == 3000 && toggleStateS == 0) {
 		rgb_set_color(nextColor.r, nextColor.g, nextColor.b);
 		toggleStateS = 1;
-		eff_sc_counter = 0;
-	} else if(eff_sc_counter == 50 && toggleStateS == 1) {
+		stroboColorido_eff_counter = 0;
+	} else if(stroboColorido_eff_counter == 50 && toggleStateS == 1) {
 		RGB current = getLineColor();
 		if(current.r < TICKS_MAX) {
 			current.r++;
@@ -81,7 +82,7 @@ void tick() {
 		}
 
 		rgb_set_color_notSafe(current.r, current.g, current.b);
-		eff_sc_counter = 0;
+		stroboColorido_eff_counter = 0;
 	}
 
 }

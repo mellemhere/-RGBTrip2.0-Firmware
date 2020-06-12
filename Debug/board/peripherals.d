@@ -11,6 +11,7 @@ board/peripherals.o board/peripherals.d: ../board/peripherals.c \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12_features.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_clock.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_common.h \
+ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_adc16.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_clock.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_ftm.h \
  D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_gpio.h \
@@ -39,6 +40,8 @@ D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\device/MK64F12_features.h:
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_clock.h:
 
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_common.h:
+
+D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_adc16.h:
 
 D:\nxp\new_workspace\frdmk64f_mqtt_test_lwip_ping_bm\drivers/fsl_clock.h:
 

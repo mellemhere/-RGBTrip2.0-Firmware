@@ -112,13 +112,6 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LED_RED_PIN 22U    /*!<@brief PORTB pin index: 22 */
                                           /* @} */
 
-/*! @name PORTB2 (number 55), LED1_R
-  @{ */
-#define BOARD_INITPINS_LED1_R_GPIO GPIOB /*!<@brief GPIO device name: GPIOB */
-#define BOARD_INITPINS_LED1_R_PORT PORTB /*!<@brief PORT device name: PORTB */
-#define BOARD_INITPINS_LED1_R_PIN 2U     /*!<@brief PORTB pin index: 2 */
-                                         /* @} */
-
 /*! @name PORTB3 (number 56), LED1_G
   @{ */
 #define BOARD_INITPINS_LED1_G_GPIO GPIOB /*!<@brief GPIO device name: GPIOB */
@@ -335,6 +328,19 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LED3_R_PORT PORTB /*!<@brief PORT device name: PORTB */
 #define BOARD_INITPINS_LED3_R_PIN 20U    /*!<@brief PORTB pin index: 20 */
                                          /* @} */
+
+/*! @name PORTD4 (number 97), LED1_R
+  @{ */
+#define BOARD_INITPINS_LED1_R_GPIO GPIOD /*!<@brief GPIO device name: GPIOD */
+#define BOARD_INITPINS_LED1_R_PORT PORTD /*!<@brief PORT device name: PORTD */
+#define BOARD_INITPINS_LED1_R_PIN 4U     /*!<@brief PORTD pin index: 4 */
+                                         /* @} */
+
+/*! @name PORTB2 (number 55), ADC_DIREITA
+  @{ */
+#define BOARD_INITPINS_ADC_DIREITA_PORT PORTB /*!<@brief PORT device name: PORTB */
+#define BOARD_INITPINS_ADC_DIREITA_PIN 2U     /*!<@brief PORTB pin index: 2 */
+                                              /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
